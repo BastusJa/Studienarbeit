@@ -2,12 +2,6 @@
 Im Gegensatz zum alten Testkonzept, bei dem die Ergebnisse des Algorithmus manuell mit den tatsächlichen Gipfeln verglichen wurden, soll nun ein neues Testkonzept entwickelt werden, das eine weitgehend automatisierte Bewertung des Algorithmus ermöglicht. Das Konzept umfasst die automatisierte Ausführung des Algorithmus mit vordefinierten Parametern, die automatisierte Erfassung der Ergebnisse und deren systematischen Vergleich mit den tatsächlichen Gipfeln sowie die automatisierte Berechnung von Metriken zur Bewertung der Genauigkeit und der Laufzeit. 
 Zu diesem Zweck soll ein Python Skript geschrieben werden, dass die obendefinierten Schritte durchführt. Das Skript soll so gestaltet sein, dass es einfach zu bedienen ist und eine große Anzahl von Testfällen schnell und effizient definiert werden können. Dies soll mit der Hilfe einer Konfigurationsdatei erreicht werden, in der die verschiedenen Testfälle definiert werden können. In dieser Datei soll auch definiert werden, welche Testfälle bei der Ausführung des Testers gestartet werden sollen. 
 
-
-Die Definition der Tests soll die Parameter Name, Input-Datei, Output-Datei, Geodaten-Datei, die Algorithmus-Parameter und den Vergleichsbereich beinhalten. Dabei dient der Name als Identifier für den Testfall. Dadurch kann der Testfall nachdem er definert wurde einfach mit einer weiteren Funktion gestartet werden. Die Input-Datei soll die realen Gipfeldaten enthalten. Die Gipfeldaten beinhalten die Namen, Koordinaten, Höhe, Prominenz, Dominanz zu jedem einzelnen Gipfel in der Testregion. Diese Daten werden später als Ground Truth für die Bewertung des Algorithmus verwendet. Die Output-Datei ist die Datei in die die testergebnisse geschrieben werden sollen. Die Geodaten-Datei enthält die Kartendaten der Testregion im Geotiff Format. Diese Daten werden dem Algorithmus später als Input übergeben. Die Algorithmus-Parameter beinhalten die Parameter, die bei der Ausführung des Algorithmus verwendet werden sollen. Diese sind die minimale Dominanz, minimale Prominenze, minimale Höhe, minimale orographische Dominanz sowie die Randbreite. \todo{verweis auf die beschreibungen der Werte} Der Vergleichsbereich definiert den Bereich um die tatsächlichen Gipfel, in dem die vom Algorithmus gefundenen Gipfel den tatsächlichen Gipfeln zugeordnet werden.
-Bei dem Testablauf soll zuerst der Algorithmus mit den definierten Parametern ausgeführt werden. Danach sollen die Ergebnisse des Algorithmus validiert werden. Dabei wird das Problem der Gipfelbestimmung als Klassifikationsproblem neu formuliert. Da der Algorithmus alle Gipfel auf der Karte bestimmt und zurückgeben soll kann er als Klassifikator betrachtet werden, der alle Punkte in die zwei Klassen: Gipfel (Positiv) und kein Gipfel (Negativ) aufteilt. Um die Genauigkeit eines Klassifikators zu überprüfen kann eine Konfusionsmatrix verwendet werden. \todo{erkläre konfusionsmatrix}
-Die richtige Klasssifikation für die Konfusionsmatrix liefert die Input-Datei \todo{verknüpfung zu unten oder darüber die definitionsparameter erwähnen}. In ihr werden alle realen Gipfel auf dem Kartenausschnitt definiert. Da die bestimmten Gipfel nie direkt auf den realen Gipfeln liegen können (da die Kartendaten pixelbasiert und somit eine Aproximation der realen Welt sind) soll ein Vergleichsbereich definiert werden, in dem die vom Algorithmus gefundenen Gipfel den tatsächlichen Gipfeln zugeordnet werden. Dadurch kann bestimmt werden, ob ein Gipfel als solcher erkannt wird oder nicht. Dabei gilt, dass es für jeden realen Gipfel nur einen gefundenen Gipfel geben darf. Daraus folgt, dass es im Vergleichsbereich um einen Gipfel nicht möglich sein darf bei korrekter Funktion des Algorithmus zwei Gipfel zu finden. Um dies sicher zu stellen muss entweder die minimale Dominanz, die dem Algorithmus übergeben wird größer als der Vergleichsbereich sein oder der Kartenausschnitt so gewählt werden, dass das Auftretten eines solchen Falles unmöglich ist. In diesem Tester wird - da es einfacher ist - der Vergleichsbereich immer kleiner als die minimale Dominanz gewählt. Daraus ergeben sich nun die Gipfel aus der Input-Datei als wahre Positive und die Gipfel, die in der Inputdatei nicht defineirt wurden als wahre Negative Werte. Die vorausgesagt Positiven Werte sind die Gipfel, die der Algorithmus bestimmt hat und die vorausgesagt Negativen Werte sind die Werte, die der Algorithmus nicht als erkannt hat. 
-
-\section{chat gpts}
 Die Definition eines Testfalls umfasst die Parameter \textit{Name}, \textit{Input-Datei}, \textit{Output-Datei}, \textit{Geodaten-Datei}, \textit{Algorithmus-Parameter} sowie den \textit{Vergleichsbereich}. Der Name dient als eindeutiger Identifier des Testfalls. Dadurch kann der Testfall nachdem er definiert wurde mit einer weiteren Funktion gestartet werdenDie Input-Datei enthält reale Gipfeldaten der Testregion. Diese umfassen für jeden Gipfel den Namen, die Koordinaten, die Höhe, die Prominenz sowie die Dominanz. Diese Daten dienen als Ground Truth zur Bewertung des Algorithmus. Die Output-Datei legt fest, in welche Datei die Testergebnisse geschrieben werden. Die Geodaten-Datei enthält die Kartendaten der Testregion im GeoTIFF-Format. Diese Daten werden dem Algorithmus als Eingabe übergeben. Die Algorithmus-Parameter definieren die Bedingungen für die Ausführung. Dazu gehören die minimale Dominanz, die minimale Prominenz, die minimale Höhe, die minimale orographische Dominanz sowie die Randbreite. Diese Parameter beeinflussen, welche Erhebungen als Gipfel klassifiziert werden. Der Vergleichsbereich definiert einen räumlichen Umkreis um jeden realen Gipfel. Innerhalb dieses Bereichs werden vom Algorithmus erkannte Gipfel einem tatsächlichen Gipfel zugeordnet. 
 
 Testfälle können auch gebündelt als Gruppe initialisiert sowie ausgeführt werden. Hierfür kann beim Erstellen jedem Testfall ein Gruppenname hinzugefügt werden. Ganze Testfallgruppen lassen sich anschließend über eine eigene Funktion definieren. Diese Funktion verwendet außer des Testgruppennamen die gleichen Parameter wie die Testfall Generierung. \todo{Testgruppen erklären als gleiche tests mit unterschiedlichen Vergleichsbereichen}
@@ -16,29 +10,45 @@ Der Testablauf besteht aus zwei Schritten. Zunächst wird der Algorithmus mit de
 
 Zur Bewertung eines Klassifikators wird eine Konfusionsmatrix verwendet. Eine Konfusionsmatrix stellt die Anzahl korrekt und falsch klassifizierter Fälle gegenüber. Sie besteht aus vier Kategorien: Wahre Positive (True Positives), Falsche Positive (False Positives), Wahre Negative (True Negatives) und Falsche Negative (False Negatives).
 
+Für die Analyse mittels Konfusionsmatrix werden ausschließlich diejenigen Punkte betrachtet, die entweder in der Input-Datei als reale Gipfel definiert sind oder vom Algorithmus als Gipfel ausgegeben werden. Es werden somit nicht alle einzelnen Pixel bzw. Geländepunkte der GeoTIFF-Datei als Klassifikationsobjekte herangezogen. Stattdessen beschränkt sich die Bewertung auf die Menge der tatsächlich existierenden Gipfel (Ground Truth) sowie auf die vom Algorithmus detektierten Gipfel. Dadurch wird die Analyse auf die für die Aufgabenstellung relevanten diskreten Objekte fokussiert und eine Verzerrung durch die sehr große Anzahl an Nicht-Gipfel-Pixeln vermieden.
+
 Die korrekte Klassifikation ergibt sich aus der Input-Datei, in der alle realen Gipfel des Kartenausschnitts definiert sind. Da die Kartendaten pixelbasiert sind und somit eine Approximation der realen Welt darstellen, können erkannte Gipfel nicht exakt auf den realen Koordinaten liegen. Daher wird der Vergleichsbereich eingeführt. Befindet sich ein vom Algorithmus erkannter Gipfel innerhalb dieses Bereichs um einen realen Gipfel, wird er diesem zugeordnet. 
 
 Für jeden realen Gipfel darf höchstens ein erkannter Gipfel zugeordnet werden. Innerhalb eines Vergleichsbereichs darf daher kein zweiter Gipfel liegen. Um dies sicherzustellen, muss die minimale Dominanz größer sein als der Vergleichsbereich oder der Kartenausschnitt so gewählt werden, dass ein solcher Fall ausgeschlossen ist. In diesem Testsystem wird der Vergleichsbereich stets kleiner als die minimale Dominanz gewählt.
 
-Auf dieser Grundlage gelten die in der Input-Datei definierten Gipfel als tatsächliche positive Fälle. Alle nicht in der Input-Datei definierten Punkte gelten als tatsächliche negative Fälle. Die vom Algorithmus erkannten Gipfel bilden die vorhergesagten positiven Fälle. Nicht erkannte Punkte bilden die vorhergesagten negativen Fälle.
+Auf dieser Grundlage gelten die in der Input-Datei definierten Gipfel als tatsächliche positive Fälle. Alle nicht in der Input-Datei definierten Punkte gelten als tatsächliche negative Fälle. Die vom Algorithmus erkannten Gipfel bilden die vorhergesagten positiven Fälle. Nicht erkannte Punkte bilden die vorhergesagten negativen Fälle. 
 
-Eine beispielhafte Konfusionsmatrix kann wie folgt dargestellt werden:
+Im Folgenden wäre hier ein Beispiel für einen Solchen Testfall im Wetterstein Gebirge.
 
 \begin{center}
 \begin{tabular}{|c|c|c|}
 \hline
  & \textbf{Vorhergesagt: Gipfel} & \textbf{Vorhergesagt: Kein Gipfel} \\
 \hline
-\textbf{Tatsächlich: Gipfel} & 42 & 8 \\
+\textbf{Tatsächlich: Gipfel} & 18 & 4 \\
 \hline
-\textbf{Tatsächlich: Kein Gipfel} & 5 & 945 \\
+\textbf{Tatsächlich: Kein Gipfel} & 10 & 0 \\
 \hline
 \end{tabular}
 \end{center}
 
-In diesem Beispiel wurden 42 reale Gipfel korrekt erkannt (Wahre Positive). Acht reale Gipfel wurden nicht erkannt (Falsche Negative). Fünf Punkte wurden fälschlicherweise als Gipfel klassifiziert (Falsche Positive). 945 Punkte wurden korrekt als Nicht-Gipfel klassifiziert (Wahre Negative).
+In diesem Beispiel wurden 18 reale Gipfel korrekt erkannt (Wahre Positive). Diese Gipfel sind in der Input-Datei und der Vorhersage des Algorithmus enthalten. Vier Gipfel aus der Input-Datei waren nicht in der Ausgabe des Algorithmus enhalten, was bedeutet, dass der Algoprithmus diese nicht erkannt hat (Falsche Negative). Zehn Gipfel wurden fälschlicherweise als Gipfel klassifiziert (Falsche Positive). Null Gipfel wurden von Algorithmus sowie Input-Datei nicht als Gipfel klassifiziert, da diese immer ignoriert werden.
 
-Auf Basis dieser Matrix können verschiedene Qualitätsmaße berechnet werden, beispielsweise die Genauigkeit (Accuracy), die Präzision (Precision) oder die Sensitivität (Recall). Die Konfusionsmatrix bildet somit die Grundlage für eine quantitative Bewertung der Algorithmusleistung.
+Auf Basis dieser Matrix können verschiedene Qualitätsmaße berechnet werden. Bei diesem Tester werden die Präzision (Precision) und die Sensitivität (Recall), sowie der F-Score (f1-Score) verwendet. Die können mit den folgenden Formeln berechnet werden:
+
+\begin{align}
+\text{Precision} &= \frac{\text{Anzahl korrekt erkannter Gipfel (Wahre Positive)}}{\text{Anzahl korrekt erkannter Gipfel (Wahre Positive)} + \text{Anzahl fälschlicherweise als Gipfel erkannter Punkte (Falsche Positive)}} \\[1em]
+\text{Recall} &= \frac{\text{Anzahl korrekt erkannter Gipfel (Wahre Positive)}}{\text{Anzahl korrekt erkannter Gipfel (Wahre Positive)} + \text{Anzahl nicht erkannter echter Gipfel (Falsche Negative)}} \\[1em]
+\text{F1-Score} &= 2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}
+\end{align} \todo{maybe in Theorieteil}
+
+Diese Metriken geben Aufschluss über die Genauigkeit des Algorithmus und zeigen wo der Algorithmus genauer ist und wo schlechter\todo{neu formulieren den satz}. Dabei zeigt die Precision wie sehr der Algorithmus zum finden neuer nicht echter Gipfel neigt und der Recall zeigt wie häufig der Algorithmus reale Gipfel nicht erkennt. Beide Werte sind \geq 0 und \leq 1. Der F-Score verbident beide Werte und zeigt ob der Algorithmus allgemein genauer ist.
+
+Andere Metriken sind die .... .-.
+
+\todo{unser ausschließen der vielen anderen werte zerstört die scala nicht, da nix von TN abhängt}
+\todo{wir wollen, dass Recall = 1 ist dann erst dass Precision = 1 aber beides ist wichtig}
+\todo{Die Konfusionsmatrix bildet somit die Grundlage für eine quantitative Bewertung der Algorithmusleistung. (toller satz zum abschluss)}
 
 
 
@@ -54,4 +64,5 @@ Auf Basis dieser Matrix können verschiedene Qualitätsmaße berechnet werden, b
 \todo{Ergebnisse sollen in ein File geschrieben werden}
 \todo{Jeder Testfall defineirt iene testregion und ihre paramter oben reinschreiben}
 \todo{tester.define\_test\_group("Wetterstein", "automated\_tests\_data\/peaks\_Wettersteinarea.json", "automated\_tests\_results\/Wetterstein", geodata\_file="test-data\/Wetterstein.tif", test\_type=Test\_Type.DEFAULT)}
+\todo{andere metriken auflisten, die verwendet werden}
 
