@@ -1,0 +1,25 @@
+\section{Neues Testkonzept}
+Im Gegensatz zum alten Testkonzept, bei dem die Ergebnisse des Algorithmus manuell mit den tatsächlichen Gipfeln verglichen wurden, soll nun ein neues Testkonzept entwickelt werden, das eine weitgehend automatisierte Bewertung des Algorithmus ermöglicht. Das Konzept umfasst die automatisierte Ausführung des Algorithmus mit vordefinierten Parametern, die automatisierte Erfassung der Ergebnisse und deren systematischen Vergleich mit den tatsächlichen Gipfeln sowie die automatisierte Berechnung von Metriken zur Bewertung der Genauigkeit und der Laufzeit. 
+Zu diesem Zweck soll ein Python Skript geschrieben werden, dass die obendefinierten Schritte durchführt. Das Skript soll so gestaltet sein, dass es einfach zu bedienen ist und eine große Anzahl von Testfällen schnell und effizient definiert werden können. Dies soll mit der Hilfe einer Konfigurationsdatei erreicht werden, in der die verschiedenen Testfälle definiert werden können. In dieser Datei soll auch definiert werden, welche Testfälle bei der Ausführung des Testers gestartet werden sollen. 
+
+
+Bei dem Testablauf soll zuerst der Algorithmus mit den definierten Parametern ausgeführt werden. Danach sollen die Ergebnisse des Algorithmus mit den tatsächlichen Gipfeln verglichen werden. Da die bestimmten Gipfel nie direkt auf den realen Gipfeln liegen können (da die Kartendaten pixelbasiert und somit eine Aproximation der realen Welt sind) soll ein Vergleichsbereich definiert werden, in dem die vom Algorithmus gefundenen Gipfel den tatsächlichen Gipfeln zugeordnet werden. \todo{weiteres ausführkonzept des testers}
+
+
+Die Definition der Tests soll die Parameter Name, Input-Datei, Output-Datei, Geodaten-Datei, die Algorithmus-Parameter und den Vergleichsbereich beinhalten. Dabei dient der Name als Identifier für den Testfall. Dadurch kann der Testfall nachdem er definert wurde einfach mit einer weiteren Funktion gestartet werden. Die Input-Datei soll die realen Gipfeldaten enthalten. Die Gipfeldaten beinhalten die Namen, Koordinaten, Höhe, Prominenz, Dominanz zu jedem einzelnen Gipfel in der Testregion. Diese Datenw erden später als Ground Truth für die Bewertung des Algorithmus verwendet. Die Output-Datei ist die Datei in die die testergebnisse geschrieben werden sollen. Die Geodaten-Datei enthält die Kartendaten der Testregion im Geotiff Format. Diese Daten werden dem Algorithmus später als Input übergeben. Die Algorithmus-Parameter beinhalten die Parameter, die bei der Ausführung des Algorithmus verwendet werden sollen. Diese sind die minimale Dominanz, minimale Prominenze, minimale Höhe, minimale orographische Dominanz sowie die Randbreite. \todo{verweis auf die beschreibungen der Werte} Der Vergleichsbereich definiert den Bereich um die tatsächlichen Gipfel, in dem die vom Algorithmus gefundenen Gipfel den tatsächlichen Gipfeln zugeordnet werden. Dieser Bereich wird in Metern angegeben und soll sicherstellen, dass nur die vom Algorithmus gefundenen Gipfel, die sich in der Nähe der tatsächlichen Gipfel befinden, als korrekt erkannt werden. \todo{Vergleichsbereich besser beschreiben}
+
+
+
+\todo{
+    - Aufbau
+    - Änderungen
+    - Testen als Verifikation der Verbesserungen
+    - Umformulierung zu einem Klassifikationsproblem
+    - Vergleich der Realdaten mit den Kartendaten
+    - Messmetriken für den Algorithmus
+    --> Komplete rework}
+
+\todo{Ergebnisse sollen in ein File geschrieben werden}
+\todo{Jeder Testfall defineirt iene testregion und ihre paramter oben reinschreiben}
+\todo{tester.define\_test\_group("Wetterstein", "automated\_tests\_data\/peaks\_Wettersteinarea.json", "automated\_tests\_results\/Wetterstein", geodata\_file="test-data\/Wetterstein.tif", test\_type=Test\_Type.DEFAULT)}
+
