@@ -1,6 +1,7 @@
-\section{Neues Testkonzept}
+\section{Neues Testkonzept} \label{Neues_Testkonzept}
 Im Gegensatz zum alten Testkonzept, bei dem die Ergebnisse des Algorithmus manuell mit den tatsächlichen Gipfeln verglichen wurden, soll nun ein neues Testkonzept entwickelt werden, das eine weitgehend automatisierte Bewertung des Algorithmus ermöglicht. Das Konzept umfasst die automatisierte Ausführung des Algorithmus mit vordefinierten Parametern, die automatisierte Erfassung der Ergebnisse und deren systematischen Vergleich mit den tatsächlichen Gipfeln sowie die automatisierte Berechnung von Metriken zur Bewertung der Genauigkeit und der Laufzeit. 
-Zu diesem Zweck soll ein Python Skript geschrieben werden, dass die obendefinierten Schritte durchführt. Das Skript soll so gestaltet sein, dass es einfach zu bedienen ist und eine große Anzahl von Testfällen schnell und effizient definiert werden können. Dies soll mit der Hilfe einer Konfigurationsdatei erreicht werden, in der die verschiedenen Testfälle definiert werden können. In dieser Datei soll auch definiert werden, welche Testfälle bei der Ausführung des Testers gestartet werden sollen. 
+
+Zu diesem Zweck soll ein Python Skript geschrieben werden, dass die obendefinierten Schritte durchführt. Das Skript soll so gestaltet sein, dass es einfach zu bedienen ist und eine große Anzahl von Testfällen schnell und effizient definiert werden können. Ein testfall ist eine testweise Ausführung des Algorithmus auf einem Kartenstück mit vordefinierten Parametern. Dies soll mit der Hilfe einer Konfigurationsdatei erreicht werden, in der die verschiedenen Testfälle definiert werden können. In dieser Datei soll auch definiert werden, welche Testfälle bei der Ausführung des Testers gestartet werden sollen. 
 
 Die Definition eines Testfalls umfasst die Parameter \textit{Name}, \textit{Input-Datei}, \textit{Output-Datei}, \textit{Geodaten-Datei}, \textit{Algorithmus-Parameter} sowie den \textit{Vergleichsbereich}. Der Name dient als eindeutiger Identifier des Testfalls. Dadurch kann der Testfall nachdem er definiert wurde mit einer weiteren Funktion gestartet werdenDie Input-Datei enthält reale Gipfeldaten der Testregion. Diese umfassen für jeden Gipfel den Namen, die Koordinaten, die Höhe, die Prominenz sowie die Dominanz. Diese Daten dienen als Ground Truth zur Bewertung des Algorithmus. Die Output-Datei legt fest, in welche Datei die Testergebnisse geschrieben werden. Die Geodaten-Datei enthält die Kartendaten der Testregion im GeoTIFF-Format. Diese Daten werden dem Algorithmus als Eingabe übergeben. Die Algorithmus-Parameter definieren die Bedingungen für die Ausführung. Dazu gehören die minimale Dominanz, die minimale Prominenz, die minimale Höhe, die minimale orographische Dominanz sowie die Randbreite. Diese Parameter beeinflussen, welche Erhebungen als Gipfel klassifiziert werden. Der Vergleichsbereich definiert einen räumlichen Umkreis um jeden realen Gipfel. Innerhalb dieses Bereichs werden vom Algorithmus erkannte Gipfel einem tatsächlichen Gipfel zugeordnet. 
 
@@ -10,7 +11,7 @@ Der Testablauf besteht aus zwei Schritten. Zunächst wird der Algorithmus mit de
 
 Zur Bewertung eines Klassifikators wird eine Konfusionsmatrix verwendet. Eine Konfusionsmatrix stellt die Anzahl korrekt und falsch klassifizierter Fälle gegenüber. Sie besteht aus vier Kategorien: Wahre Positive (True Positives), Falsche Positive (False Positives), Wahre Negative (True Negatives) und Falsche Negative (False Negatives).
 
-Für die Analyse mittels Konfusionsmatrix werden ausschließlich diejenigen Punkte betrachtet, die entweder in der Input-Datei als reale Gipfel definiert sind oder vom Algorithmus als Gipfel ausgegeben werden. Es werden somit nicht alle einzelnen Pixel bzw. Geländepunkte der GeoTIFF-Datei als Klassifikationsobjekte herangezogen. Stattdessen beschränkt sich die Bewertung auf die Menge der tatsächlich existierenden Gipfel (Ground Truth) sowie auf die vom Algorithmus detektierten Gipfel. Dadurch wird die Analyse auf die für die Aufgabenstellung relevanten diskreten Objekte fokussiert und eine Verzerrung durch die sehr große Anzahl an Nicht-Gipfel-Pixeln vermieden.
+Für die Analyse mittels Konfusionsmatrix werden ausschließlich diejenigen Punkte betrachtet, die entweder in der Input-Datei als reale Gipfel definiert sind oder vom Algorithmus als Gipfel ausgegeben werden. Es werden somit nicht alle einzelnen Pixel bzw. Geländepunkte der GeoTIFF-Datei als Klassifikationsobjekte herangezogen. Stattdessen beschränkt sich die Bewertung auf die Menge der tatsächlich existierenden Gipfel (Ground Truth) sowie auf die vom Algorithmus detektierten Gipfel. Dadurch wird die Analyse auf die für die Aufgabenstellung relevanten diskreten Objekte fokussiert und eine Verzerrung durch die sehr große Anzahl an Nicht-Gipfel-Pixeln vermieden. Zudem sind Puntke die keine Gipfel sind und vom Algorithmus nicht als solche erkannt werden für die aus den Konfusionsmatrix bestimmten Metriken nicht relevant (\todo{verweis auf formeln Precision und Recall}).
 
 Die korrekte Klassifikation ergibt sich aus der Input-Datei, in der alle realen Gipfel des Kartenausschnitts definiert sind. Da die Kartendaten pixelbasiert sind und somit eine Approximation der realen Welt darstellen, können erkannte Gipfel nicht exakt auf den realen Koordinaten liegen. Daher wird der Vergleichsbereich eingeführt. Befindet sich ein vom Algorithmus erkannter Gipfel innerhalb dieses Bereichs um einen realen Gipfel, wird er diesem zugeordnet. 
 
@@ -37,32 +38,19 @@ In diesem Beispiel wurden 18 reale Gipfel korrekt erkannt (Wahre Positive). Dies
 Auf Basis dieser Matrix können verschiedene Qualitätsmaße berechnet werden. Bei diesem Tester werden die Präzision (Precision) und die Sensitivität (Recall), sowie der F-Score (f1-Score) verwendet. Die können mit den folgenden Formeln berechnet werden:
 
 \begin{align}
-\text{Precision} &= \frac{\text{Anzahl korrekt erkannter Gipfel (Wahre Positive)}}{\text{Anzahl korrekt erkannter Gipfel (Wahre Positive)} + \text{Anzahl fälschlicherweise als Gipfel erkannter Punkte (Falsche Positive)}} \\[1em]
-\text{Recall} &= \frac{\text{Anzahl korrekt erkannter Gipfel (Wahre Positive)}}{\text{Anzahl korrekt erkannter Gipfel (Wahre Positive)} + \text{Anzahl nicht erkannter echter Gipfel (Falsche Negative)}} \\[1em]
+\text{Precision} &= \frac{\text{True Positiv (TP)}}{\text{True Positiv (TP)} + \text{False Positiv (FP)}} \\[1em]
+\text{Recall} &= \frac{\text{True Positiv (TP)}}{\text{True Positiv (TP)} + \text{False Negativ (FN)}} \\[1em]
 \text{F1-Score} &= 2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}
 \end{align} \todo{maybe in Theorieteil}
 
-Diese Metriken geben Aufschluss über die Genauigkeit des Algorithmus und zeigen wo der Algorithmus genauer ist und wo schlechter\todo{neu formulieren den satz}. Dabei zeigt die Precision wie sehr der Algorithmus zum finden neuer nicht echter Gipfel neigt und der Recall zeigt wie häufig der Algorithmus reale Gipfel nicht erkennt. Beide Werte sind \geq 0 und \leq 1. Der F-Score verbident beide Werte und zeigt ob der Algorithmus allgemein genauer ist.
+Diese Metriken geben Aufschluss über die Genauigkeit des Algorithmus und zeigen wo der Algorithmus genauer ist und wo schlechter \todo{neu formulieren den satz}. Dabei zeigt die Precision wie sehr der Algorithmus zum finden neuer nicht echter Gipfel neigt und der Recall zeigt wie häufig der Algorithmus reale Gipfel nicht erkennt. Beide Werte sind $\geq 0$ und $\leq 1$. Der F-Score verbindet beide Werte und zeigt wie genau der Algorithmus allgemein ist. 
 
-Andere Metriken sind die .... .-.
+Dabei \todo{dabei austauschen} gilt desto näher die Werte an eins sind, desto besser ist der Algorithmus. Am Wichtigsten ist, dass der Recall möglichst nahe an der eins ist, da es für einen Suchalgorithmus besser ist unötige Werte zu finden als Werte zu übersehen. 
 
-\todo{unser ausschließen der vielen anderen werte zerstört die scala nicht, da nix von TN abhängt}
-\todo{wir wollen, dass Recall = 1 ist dann erst dass Precision = 1 aber beides ist wichtig}
-\todo{Die Konfusionsmatrix bildet somit die Grundlage für eine quantitative Bewertung der Algorithmusleistung. (toller satz zum abschluss)}
+Andere Metriken zur Bestimmung der Genauigkeit sind die durchschittlichen Abweichungen der Position, Höhe, Prominenz und Dominanz pro Testfall. Diese Werte zeigen die Genauigkeit des Algorithmus für die vom Algorithmus gefundenen realen Gipfel. Sie werden in Metern angegeben. Zusätzlich wird bei der Positionsabweichung eine Abweichung in X- und Y-Richtung bestimmt. Alle Metriken werrden in die im Testfall definierte Output-Datei geschrieben. Abgesehen von diesen Metriken werden zudem die Zuordnungen der Gipfel und die Einzelabweichungen pro Gipfel in die Output-Datei geschrieben.
 
+Außerdem sollen Metriken implementiert werden, die die Laufzeit des Algorithmus aufzeigen und verdeutlichen, wo der Algorithmus längere Zeit benötigt als erwartet. Für diesen Zweck soll eine Funktion implementiert werden, die die gesammte Ausführtzeit sowie die einzelnen Ausführzeiten der Teilbereiche (globale Maximasuche, Prominenzberechnung, Dominanzberechnung) zurückgibt. 
 
+Zusammengefasst kann gesagt werden, dass das neue Testkonzept, bis auf die Testfalldefinition, automatisiert abläuft und dadurch, dass die Suche als Klassifikationsproblem neu formuliert wird die Genauigkeit des Algorithmus bestimmt werden kann. Außerdem liefert das neue Testkonzept eine zeitliche Abschätzung der Leitung der einzelnen Teiile des Algorithmus. \todo{besserer Satzbnau (verstehe ihn selbst nicht mal richtig)}
 
-\todo{
-    - Aufbau
-    - Änderungen
-    - Testen als Verifikation der Verbesserungen
-    - Umformulierung zu einem Klassifikationsproblem
-    - Vergleich der Realdaten mit den Kartendaten
-    - Messmetriken für den Algorithmus
-    --> Komplete rework}
-
-\todo{Ergebnisse sollen in ein File geschrieben werden}
-\todo{Jeder Testfall defineirt iene testregion und ihre paramter oben reinschreiben}
-\todo{tester.define\_test\_group("Wetterstein", "automated\_tests\_data\/peaks\_Wettersteinarea.json", "automated\_tests\_results\/Wetterstein", geodata\_file="test-data\/Wetterstein.tif", test\_type=Test\_Type.DEFAULT)}
-\todo{andere metriken auflisten, die verwendet werden}
 
