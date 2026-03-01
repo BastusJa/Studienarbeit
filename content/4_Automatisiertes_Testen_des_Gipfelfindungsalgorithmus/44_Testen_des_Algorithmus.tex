@@ -12,11 +12,17 @@ Der erste Kartenausschnitt konzentriert sich auf das Wettersteingebirge (Alpen) 
 
 Der zweite Kartenausschnitt zentriert sich um den höchsten Berg des Schwarzwaldes, den Feldberg. Dieser Bereich wurde gewählt, da der Algorithmus bis jetzt weniger in Mittelgebirgen getestet wurde. In Mittelgebirgen sind die Hänge meist weniger steil und die Gipfel weniger eindeutig. Die Whal fiel auf die Region um den Feldberg, da diese Region gut kartographiert ist und daher die Gipfel schon genau bestimmt sind. Außerdem gleicht der Feldberg auf seinem Gipfel mehr einer Hochebene als einem herkömlichen Gipfel. Dieses Terrain ist daher ein gutes Gegenstück zu den schroffen und unebenen nördlichen Kalkalpen.  
 
-\todo{bild Süd Schwarzwald}
+\todo{bild Südschwarzwald}
 
-Der letzte Kartenausschnitt ist ein großer Kartenausschnitt des Süd Schwarzwalds. Die Wahl fällt auf den Südschwarzwald, da er sehr vielseitig ist. Er fällt in richtung Süden und Westen steil ins Rheintal ab und wandelt sich in den Osten in eine Hügellandschaft. Dieser Test soll, durch das einschließen des Rheintals bei Schaffhausen außerdem zeigen, wie sich der Algorithmus auf weniger gut karthographiertem Gebeit bedienen lässt und ob er Erhebungen finden, die nicht in den Datenquellen enthalten sind.
+Der letzte Kartenausschnitt ist ein großer Kartenausschnitt des Südschwarzwalds. Die Wahl fällt auf den Südschwarzwald, da er sehr vielseitig ist. Er fällt in richtung Süden und Westen steil ins Rheintal ab und wandelt sich in den Osten in eine Hügellandschaft. Dieser Test soll, durch das einschließen des Rheintals bei Schaffhausen außerdem zeigen, wie sich der Algorithmus auf Gebiet bedienen lässt, wo nicht alle Gipfel in der Datenquelle zwingend bekannt sind.
 
-Es wurde kein Abschnitt in Schweizer Alpen gewählt, da der Algorithmus dort schon mehr getestet wurde.
+Es wurde kein Abschnitt in den Schweizer Alpen gewählt, da der Algorithmus dort schon in \todo{zitat zu Tester-Studienarbeit} getestet wurde.
+
+Die Vergleichsbereich werden bei den Tests jeweils jeweils einmal als \textit{$\sqrt{2}$ * Pixelgröße}, \textit{100m} und \textit{minimale Dominanz} gewählt. Das sorgt dafür, dass schnell erkennbar ist welche Gipfel auf welcher Genauigkeit erkannt wurden. Dabei beschreibt \textit{$\sqrt{2}$ * Pixelgröße} die maximale Genauigkeit mit der eine pixelbassierte Karte einen Gipfel voraussagen kann. Die \textit{100m} sind der Bereich, den wir als gewünschte Genauigkeit des Algorithmus definiert haben. Die \textit{minimale Dominanz} beschreibt nach \ref{Neues_Testkonzept} den maximalen Bereich in dem wir die realen Gipfel den gefundenen zuordnen können.
+
+Es wurde kein Abschnitt in den Schweizer Alpen gewählt, da der Algorithmus dort schon in \todo{zitat zu Tester-Studienarbeit} getestet wurde.
+
+Die Vergleichsbereich werden bei den Tests jeweils jeweils einmal als \textit{$\sqrt{2}$ * Pixelgröße}, \textit{100m} und \textit{minimale Dominanz} gewählt. Das sorgt dafür, dass schnell erkennbar ist welche Gipfel auf welcher Genauigkeit erkannt wurden. Dabei beschreibt \textit{$\sqrt{2}$ * Pixelgröße} die maximale Genauigkeit mit der eine pixelbassierte Karte einen Gipfel voraussagen kann. Die \textit{100m} sind der Bereich, den wir als gewünschte Genauigkeit des Algorithmus definiert haben. Die \textit{minimale Dominanz} beschreibt nach \ref{Neues_Testkonzept} den maximalen Bereich in dem wir die realen Gipfel den gefundenen zuordnen können.
 
 \subsection{Beschaffung der Testdaten}
 Die Testdaten wurden aus verschiedenen Quellen beschafft. Die Geodaten (GeoTIFF-Dateien) wurden von verschiedenen Quellen beschafft. Für die Alpen wurden die Daten des Copernicus Programms der EU \todo{abkürzung} bezogen. Diese Entscheidung wurde Aufgrund der Ländergrenze zwischen Deutschland und Österreich, welche sich in dem Kartenausschnitt befindet, getätigt. Als Kartenmodell wurde hier die \enquote{Digital Elevation Model (DEM) for Europe at 30 meter} gewählt. Aus ihr können Kartenausschnitte von Europa im mit einer Auflösung von 30m pro Pixel heruntergeladen werden.
