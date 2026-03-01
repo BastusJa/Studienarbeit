@@ -3,13 +3,41 @@ Wie bereits in \ref{Neues_Testkonzept} definiert wird der Tester mit einer Konfi
 
 Der Tester besteht aus zwei Klassen. Sie heißen Test\_Runner und Test\_Controler. 
 
+\subsection{Test\_Controler}
+
 \todo{Diagramm uml of test\_controler}
 
-Der Test\_Controler ist für die Haushaltung und initialisierung der Tests zuständig. 
-\todo{beschreibung definition der Funktion des Test\_Controler}
-Er führt außerdem die Tests der Laufzeitdauer durch, da diese wenig Programmcode zur Ausführung benötigen und eine andere Ausführlogik sowie Metriken wie die Genauigkeitstests besitzen.
+Die Klasse \verb|Test_Controler| ist die zentrale Steuerungseinheit für die automatisierten Tests. Sie ist dafür verantwortlich, Testkonfigurationen zu definieren, zu verwalten und auszuführen.
+
+\paragraph{Testdefinition}
+Die Methode \verb|define_test()| ermöglicht die Definition eines einzelnen Testlaufs. Dabei werden Parameter wie der Name des Tests, die zu verwendenden Geodaten, die Ausgabedatei für die Ergebnisse sowie die Schwellenwerte für die Gipfelerkennung (Prominenz, Dominanz, etc.) festgelegt. Diese Konfiguration wird als \verb|Test_Config|-Objekt gespeichert.
+
+Für die Durchführung von Testreihen existiert die Methode \verb|define_test_group()|. Diese Methode generiert eine Gruppe von Tests, die sich in der Regel nur durch einen variierenden Parameter unterscheiden, wie beispielsweise dem \textit{Matching-Radius}. Dies vereinfacht das Testen von verschiedenen Konfigurationen für ein bestimmtes Szenario.
+
+\subsubsection{Testausführung}
+Die Ausführung der Tests wird über die Methoden \verb|run_test()| und \verb|run_test_group()| gesteuert. \verb|run_test()| kann entweder einen einzelnen, spezifischen Test anhand seines Namens oder alle definierten Tests ausführen. \verb|run_test_group()| führt alle Tests aus, die zu einer bestimmten Gruppe gehören.
+
+Intern verwaltet der \verb|Test_Controler| eine Liste von \verb|Test_Runner|-Instanzen. Für jede Testkonfiguration wird geprüft, ob bereits ein kompatibler \verb|Test_Runner| (für die gleiche Geodaten-Datei oder den gleichen Ordner) existiert. Ist dies der Fall, wird dieser wiederverwendet, um das wiederholte Laden und Vorverarbeiten der Geodaten zu vermeiden. Andernfalls wird eine neue \verb|Test_Runner|-Instanz erzeugt. \todo{ist das wirklich so?}
+
+\subsubsection{Zeitmessung und Parametertests}
+Zusätzlich zu den funktionalen Tests bietet der \verb|Test_Controler| Methoden zur Zeitmessung (\verb|timetest_single_file()| und \verb|timetest_multiple_file()|). Diese führen die Gipfelanalyse für eine einzelne Datei oder mehrere Dateien durch und messen die benötigte Zeit für die einzelnen Teilschritte des Algorithmus, wie die Suche nach lokalen Maxima, die Prominenz- und die Dominanzberechnung. Die Methode \verb|multiple_execution_test()| ermöglicht es, die Analyse mehrfach hintereinander auszuführen, um die Stabilität und Konsistenz der Laufzeit zu bewerten. Diese Logik wurde hier im \verb|Test_Controler| implementiert, da diese Tests wenig Programmcode zur Ausführung benötigen und eine andere Ausführlogik sowie Metriken wie die Genauigkeitstests besitzen.
+
+\subsection{Test\_Runner}
 
 \todo{Diagramm uml of test\_runner}
 
-Der Test\_Runner ist für die Ausführung der Genauigkeitstests zuständig. 
-\todo{bescchreibe Test\_runner}
+Der \verb|Test_Runner| ist für die Durchführung und Auswertung der Genauigkeitstests zuständig. Jede Instanz dieser Klasse ist an ein bestimmtes Set von Geodaten gebunden, welche sie bei der Initialisierung lädt und für alle nachfolgenden Tests wiederverwendet.
+
+\subsubsection{Initialisierung und Datenvorbereitung}
+Beim Erstellen eines \verb|Test_Runner|-Objekts werden die digitalen Höhenmodelldaten (DEM) eingelesen und vorverarbeitet. Wichtige Metadaten wie das Koordinatenreferenzsystem, die Auflösung und die Umrechnungsfaktoren zwischen Pixel und Meter werden extrahiert und für spätere Berechnungen zwischengespeichert. Dieser Schritt ist ressourcenintensiv, weshalb der \verb|Test_Controler| darauf achtet, \verb|Test_Runner|-Instanzen für bereits geladene Geodaten wiederzuverwenden. \todo{ist das wirklich so?}
+
+\subsubsection{Testdurchführung}
+Die zentrale Methode ist \verb|execute_test()|, die eine spezifische Testkonfiguration entgegennimmt. Der Ablauf eines Tests ist wie folgt:
+\begin{enumerate}
+    \item \textbf{Einlesen der Testdaten:} Die realen Gipfel (\enquote{True Peaks}) und die bekannten Nicht-Gipfel (\enquote{Fake Peaks}) werden aus der angegebenen JSON-Datei geladen.
+    \item \textbf{Gipfelsuche:} Der Gipfelfindungsalgorithmus wird mit den in der Konfiguration definierten Schwellenwerten (z.B. für Prominenz und Dominanz) auf den Geodaten ausgeführt.
+    \item \textbf{Normalisierung:} Die gefundenen Gipfel werden in ein einheitliches Datenformat überführt, um den Vergleich mit den realen Gipfeln zu ermöglichen.
+    \item \textbf{Matching:} Die gefundenen Gipfel werden mit den realen Gipfeln abgeglichen. Ein gefundener Gipfel gilt als "Treffer" (\textit{True Positive}), wenn er sich innerhalb eines definierten Radius (\textit{Matching-Area}) um einen realen Gipfel befindet. Gefundene Gipfel, die keinem realen Gipfel zugeordnet werden können, gelten als \textit{False Positives}. Reale Gipfel, die nicht gefunden wurden, sind \textit{False Negatives}.
+    \item \textbf{Auswertung und Statistik:} Aus den Ergebnissen des Matchings werden Metriken wie Präzision (\textit{Precision}), Sensitivität (\textit{Recall}) und der F1-Score berechnet. Zusätzlich werden die durchschnittlichen Abweichungen für Position, Höhe, Prominenz und Dominanz ermittelt.
+    \item \textbf{Ausgabe und Export:} Die berechneten Statistiken und Ergebnisse werden in der Konsole ausgegeben und zur späteren Analyse in einer JSON-Datei gespeichert.
+\end{enumerate} \todo{maybe hier diagramm  über genaue ausführreichenfolge und datenübergabelogik und dependencies?}
