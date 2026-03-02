@@ -131,28 +131,45 @@ Durchschnittlicher Prominenzfehler (m) & 98.58 \\
 
 \todo{problem solstein}
 
-In diesen Allgemeinen Testergenissen ist gut zu erkennen, dass der Tester weniger Probleme damit hat Gipfel zu erkennen, sondern deren Prominenz und Dominanz richtig zu bestimmen. Das zeigt sich in den für die gewählten Schwellenwerte hohen durchscnittlichen Prominenz und Dominanz. Um nun genauer zu erkennen, was für die Abweichungen verantwortlich ist, müssen die einzelnen Werte untersucht werden. Dabei fällt auf, dass die meisten Berge eine unerwartet hohe Dominanzabweichung haben. Dabei gibt es auch ein paar Gipfel, die besonders hohe oder niedrige Abweichungen haben. Diese sind für die Bestimmung der Fehlerursache wichtig. Der Gipfel mit der höchsten Abweichung ist die Birkkarspitze (11,5km) und der Gipfel mit der niedrigsten ist der Hochplattig (36m). Eine höhere Abweichung der Dominanz vom Realwert lässt sich bei der Birkkarspitze zwar alleine durch die Hohe Dominanz von 33km erklären, aber 11,5km ist dennoch zu hoch um nicht auf einen Fehler im Höhenmodell oder Algorithmus hinzudeuten. Um einen besseren Überblick über die Gipfel zu bekommen, werden ihre Possition, sowie nächst höheren Punkte miteinander verglichen. Das ist in \todo{diagramm dominanz birkkarspitze} zu sehen:
+In diesen Allgemeinen Testergenissen ist gut zu erkennen, dass der Tester weniger Probleme damit hat Gipfel zu erkennen, sondern deren Prominenz und Dominanz richtig zu bestimmen. Das zeigt sich in den für die gewählten Schwellenwerte hohen durchscnittlichen Prominenz und Dominanz. Um nun genauer zu erkennen, was für die Abweichungen verantwortlich ist, müssen die einzelnen Werte untersucht werden. Dabei fällt auf, dass die meisten Berge eine unerwartet hohe Dominanzabweichung haben. Dabei gibt es auch ein paar Gipfel, die besonders hohe oder niedrige Abweichungen haben. Diese sind für die Bestimmung der Fehlerursache wichtig. Der Gipfel mit der höchsten Abweichung ist die Birkkarspitze (11,5km) und der Gipfel mit der niedrigsten ist der Hochplattig (36m). Eine höhere Abweichung der Dominanz vom Realwert lässt sich bei der Birkkarspitze zwar alleine durch die Hohe Dominanz von 33km erklären, aber 11,5km ist dennoch zu hoch um nicht auf einen Fehler im Höhenmodell oder Algorithmus hinzudeuten. Um das Problem besser einordnen zu können, werden die Gipfel und ihre Possition, sowie nächst höheren Punkte miteinander verglichen. Das folgende Diagramm \ref{fig:Dominanz_von_Wetterstein} zeigt den Kartenbereich und vier Gipfel die so aufbereitet wurden. 
 
+\begin{figure}[h] % h=here, t=top, b=bottom, p=page
+    \centering
+    \includegraphics[width=1.0\textwidth]{Diagramms/Dominenz_Wetterstein.drawio.png}
+    \caption{Dominanz von Daniel, Birkkarspitze, Hochplattig und Große Arnspitze}
+    \label{fig:Dominanz_von_Wetterstein}
+\end{figure}
 
+Zusätzlich sind die relativen Fehler der Dominanzen in dem Diagramm \ref{tab:relativer_fehler_Wetterstein} zu sehen. Hieran ist gut zu erkennen, dass der Hochplattig der einzige Berg ist, desen Dominanz nur in Y-Richtung bestimmt wurde. \todo{schlussfoldern, das berechnung der Distanz Müll}
 
-Anhand dieses Beispiels lässt sich gut erkennen, dass die Dominanz der Birkkarspitze mit einem Winkel von \todo{winkel einsetzen} berechnet wurde. 
+\begin{table}[htbp]
+\centering
+\caption{Relative Fehler pro Gipfel}
+\label{tab:relativer_fehler_Wetterstein}
+\begin{tabular}{|l|r|}
+\hline
+Gipfel & Wert (\%) \\
+\hline
+Birkkarspitze & 34,84\%  \\
+\hline
+Hochplattig & 0,6\% \\
+\hline
+Daniel & 36,0\% \\
+\hline
+Große Arnspitze & 16,9\% \\
+\hline
+\end{tabular}
+\end{table}
 
-
-
-Es wurde festgestellt, dass der Algorithmus bei den meisten Tests die Position der Gipfel mit einer hohen Genauigkeit bestimmt. Die Höhe der Gipfel wird ebenfalls mit einer hohen Genauigkeit bestimmt, wobei die durchschnittliche Abweichung meist unter 10 Metern liegt. Diese Abweichungen lassen sich durch die Auflösung und Qualität der Geodaten, sowie Realdaten erklären. 
-
-Es gibt Fälle in welchen der Algorithmus Gipfel erkennt, die in Realität nicht existieren. Das passiert nur in der Nähe des Kartenrandes. Das liegt daran, dass kleine Erhebungen am Hang eines Berges nahe des Kartenrandes nicht als Gipfel ausgeschlossen  werden können. In diesem Fall wird ihnen der Hang des gesammten Berges bei der Prominenzberechnung angerechent. \todo{diagram mit Zylinder oder berg und dann ne border durch/ höhenlinien an border} Um dies zu verhindern wurde bereits die \textit{border width} eingeführt. Diese scheint aber nicht richtig zu funktionieren, die Randwertfehler nun am Rand der \textit{border width} auftretten.
+Ein anderes Problem ist, dass der Algorithmus Gipfel erkennt, die in Realität nicht existieren. Das passiert nur in der Nähe des Kartenrandes. Das liegt daran, dass kleine Erhebungen am Hang eines Berges nahe des Kartenrandes nicht als Gipfel ausgeschlossen  werden können. In diesem Fall wird ihnen der Hang des gesammten Berges bei der Prominenzberechnung angerechent. \todo{diagram mit Zylinder oder berg und dann ne border durch/ höhenlinien an border} Um dies zu verhindern wurde bereits die \textit{border width} eingeführt. Diese scheint aber nicht richtig zu funktionieren, die Randwertfehler nun am Rand der \textit{border width} auftretten.
 
 \todo{das border width problem diagramm}
 
-Die Prominenz und Dominanz werden ebenfalls mit einer guten Genauigkeit bestimmt, wobei die durchschnittliche Abweichung meist unter 20 Metern liegt. Die Laufzeit des Algorithmus variiert je nach Größe des Kartenausschnitts und der Anzahl der gefundenen Gipfel, liegt aber in der Regel im Bereich von einigen Sekunden bis zu einigen Minuten. \todo{das stimmt nicht, werte ändern}
+Der Algorithmus erkennt einzelne Gipfel nicht als Gipfel. In diesem Test-Szenario ist das der kleine Solstein bei Innsbruck. Der Grund hierfür ist, dass seine Prominenz als unter 500m vorhergesagt wird, obwohl sie bei 517m liegt. Dieses Problem lässt sich auf die Kartenqualität zurückführen. 
 
-\todo{birkkarspitzenproblem, wannig hat das auch}
+Wenn ein Gipfel in dem Vergleichsbereich um einen realen Gipfel liegt, heißt das nicht, dass der Algorithmus den Gipfel erkennt. Das wird bei der Birkkarspitze erkenntlich, wo der Algorithmus die mittlere Ödkarspitze als Gipfel erkannt hat, die eigentliche Birkkarspitze nicht. Dieser Fehler kann mit der genauigkeit der Karte erklärt werden. 
 
-\todo{In dem alten Algorithmus wurde angenommen, dass die Prominece immer zum nächsten Gipfel geht. Das muss sie nicht. 
-Das spiegelt der neue Algorithmus mit einer modifierten Abbruchbedingung und keinem Endpunkt wieder.}
-
-\todo{analyse auf altem project}
+\subsection{Feldberg-Test}
 
 \todo{abschlißend die schwierigkeiten des algorithmus als Topografische bereiche}
 
