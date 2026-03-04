@@ -1,4 +1,11 @@
-- Abbruch nicht bei erreichen des nächsten gipfels
+\section{Verbesserung der Abbruchbedingung und -logik}
+Die fehlerhaften Werte bei der Prominenzberechnung abseits des Randes lassen sich durch die nicht optimal implementierte Abbruchbedingung erklären. Die Abbruchbedingung prüft aktuell ob der nächstliegende höhere Gipfel erreicht ist und gibt dann den Sattelpunkt zwischen diesen beiden Gipfeln zurück. Das Problem, dass diese Implementierung nicht der korrekten Definition der Prominenz entspricht. \todo{ref def Prominenz} Die Prominenz ist nicht der Höhenunterschied zwischen einem Gipfel und dem Sattel zum nächstgelegenen höheren Gipfel. Vielmehr beschreibt die Prominenz den Höhenunterschied zwischen einem Gipfel und dem höhstgelegenen Sattel zu einem höheren Gipfel. Dieser höhere Gipfel ist zwar meist auch der nächste höhere Gipfel, muss es aber nicht sein. Das lässt andem beispiel des Zuspitzecks \ref{fig:Satelitenbild_Zugspitzeck} gut erkennen. Das Zuspitzeck ist dabei zwar näher an dem Schneefernerkopf als an der Zugspitze, aber der Höhste Sattel zwischen Zugspitze und Zugspitzeck ist 2788m hoch und der Sattelpunkt zwischen Schneefernerkopf und Zugspitzeck ist 2699m hoch. Das bedeutet, dass bei einer Messung der Prominenz näheren Gipfel (Schneefernernkopf) hier 116m Dominanz errechnet werden und nicht 27m wie es eigentlich sein sollten. Daher muss die Abbruchbedingung angepasst werden. 
 
-\todo{In dem alten Algorithmus wurde angenommen, dass die Prominence immer zum nächsten Gipfel geht. Das muss sie nicht. 
-Das spiegelt der neue Algorithmus mit einer modifierten Abbruchbedingung und keinem Endpunkt wieder.}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1.0\textwidth]{Diagramms/Abstände_Zugspitzeck.drawio.png}
+    \caption{Satelitenbild des Zugspitzecks}
+    \label{fig:Satelitenbild_Zugspitzeck}
+\end{figure}
+
+Die neue Abbruchbedingung besagt, dass der Algorithmus abbricht, wenn er einen Punkt erreicht, der höher ist als der Gipfel für den er die Prominenz bestimmen soll. Denn ab da wo ein höherer Punkt gefunden wurde, muss auf diesen ein höherer Gipfel folgen. Für die Prominenz ist es nicht relevant wie hoch der höhere Gipfel ist, sondern wie hoch der Sattelpunkt ist. Daher kann an diesem Punkt bereits abgebrochen werden, was die Anzahl der untersuchten Pixel senkt. \todo{warum garantiert das den höchsten Sattelpunkt zu treffen}
