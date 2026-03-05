@@ -1,1 +1,16 @@
-- Die verbesserung der Distanzberechnungen
+\section{Verbesserung der Distanzberechnung}
+Die Berechnung der Dominanz wies einen systematischen Fehler auf, der durch eine ungenaue Distanzmessung verursacht wurde. Im ursprünglichen Algorithmus wurde die Distanz zwischen dem Gipfel und dem nächsthöheren Punkt mittels der euklidischen Distanztransformation auf die Pixelkoordinaten berechnet. Dieser Ansatz, der dem Satz des Pythagoras auf einem Pixelgitter entspricht, ist jedoch aus mehreren Gründen problematisch und führt zu ungenauen Ergebnissen.
+
+Ein grundlegendes Problem ist die inhärente Vereinfachung, die Geodaten als eine flache, zweidimensionale Ebene zu behandeln. Die euklidische Distanz ignoriert die Krümmung der Erdoberfläche vollständig. Während dieser Fehler bei kleinen Kartenausschnitten vernachlässigbar sein mag, wächst er mit zunehmender Entfernung signifikant an und führt zu einer systematischen Unterschätzung der wahren geodätischen Distanz.
+
+Des Weiteren basiert die pixelbasierte Berechnung auf der fehlerhaften Annahme, dass jedes Pixel einer quadratischen Fläche mit konstanter Kantenlänge in der Realität entspricht. Dies trifft auf viele Geodatenprojektionen nicht zu. Insbesondere bei Daten im weit verbreiteten WGS84-Format, das auf geografischen Koordinaten basiert, ist diese Annahme falsch. Der durch einen Längengrad abgedeckte Abstand in Metern schrumpft von über 111\,km am Äquator auf null an den Polen. Die Anwendung einer euklidischen Metrik auf solche Koordinaten ist daher mathematisch inkorrekt und führt zu stark verzerrten Distanzwerten, die je nach geografischer Breite variieren.
+
+Zusammengenommen führen diese Faktoren zu einer systematischen Verfälschung der Dominanzwerte, deren Größe und Richtung von der Position auf der Erde, der Projektion des Datensatzes und der Ausdehnung des Kartenausschnitts abhängen. Um diese Fehlerquellen zu eliminieren und eine präzisere sowie universell anwendbare Berechnung zu gewährleisten, wurde die Methode zur Distanzmessung grundlegend überarbeitet. Anstelle der pixelbasierten euklidischen Distanz wird nun die Haversine-Formel verwendet. Diese Formel berechnet den Großkreisabstand zwischen zwei Punkten auf einer Kugel (der Erde) anhand ihrer geografischen Koordinaten.
+
+\begin{equation}
+    d = R \cdot \arccos(\sin(\phi_1)\sin(\phi_2) + \cos(\phi_1)\cos(\phi_2)\cos(\Delta\lambda))
+    \label{eq:haversine}
+\end{equation}
+Hierbei sind $\phi_1, \phi_2$ die Breitengrade, $\Delta\lambda$ die Differenz der Längengrade und $R$ der Erdradius.
+
+Die Implementierung der Dominanzberechnung wurde entsprechend angepasst. Der neue Algorithmus identifiziert zunächst alle Punkte im Datensatz, die höher sind als der betrachtete Gipfel. Anschließend wird für jeden dieser höheren Punkte die geodätische Distanz zum Gipfel mittels der Haversine-Formel berechnet. Die Dominanz ist dann die kleinste dieser berechneten Distanzen. Dieses Vorgehen stellt sicher, dass die Dominanz als tatsächliche Entfernung auf der Erdoberfläche und nicht als Distanz im Pixelraum gemessen wird, was die Genauigkeit der Ergebnisse erheblich verbessert.
