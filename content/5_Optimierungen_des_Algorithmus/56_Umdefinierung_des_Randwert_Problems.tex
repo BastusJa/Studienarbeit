@@ -1,5 +1,30 @@
-\section{Die Umdefinition des Randwertproblem}
-Das Randwertproblem ist eines der größten Probleme des Algorithmus. Es entsthet dadurch, dass Werte, die am Rand des Kartenausschnittes liegen nicht sicher als Berge klassifiziert werden können. Das liegt daran, dass ein in den Kartenbereich hereinragender Hang auch alks Berg erkannt werden würde. Sein höhster Punkt wäre dadruch ein Gipfel, obwohl er nur ein unbedeutender Punkt auf dem Hang ist. Dieses Problem soll dadurch gelöst werden, dass ein Randbereich definiert wird, der in der Hochpunktfindung nicht betrachet wird. \todo{vergleich und ref zu tehorie Randwert} 
+\section{Neubewertung des Randwertproblems}
+Ein zentrales Problem bei der Analyse von topografischen Daten in begrenzten Kartenausschnitten ist das Randwertproblem. Es entsteht, weil die topografischen Informationen an den Grenzen des Datensatzes enden und somit eine vollständige Analyse der Umgebung für Punkte in Randnähe unmöglich ist. Ein Hang, der in den Kartenausschnitt hineinragt, könnte fälschlicherweise als eigenständiger Berg klassifiziert werden, da der Algorithmus nicht erkennen kann, dass es sich lediglich um den Ausläufer eines außerhalb liegenden, höheren Berges handelt. Der höchste Punkt dieses Hangs innerhalb des Ausschnitts würde fälschlicherweise als Gipfel identifiziert.
+
+Um dieses Problem systematisch zu adressieren, wird die Konzepte der \textit{minimalen Prominenz} und \textit{minimalen Dominanz} eingeführt. Diese Metriken quantifizieren die untere Schranke für die wahren Prominenz- und Dominanzwerte, die allein aus den Daten des Kartenausschnitts herleitbar ist. Sie repräsentieren eine konservative Schätzung unter der Annahme, dass sich direkt außerhalb der Kartengrenze eine unendlich hohe Bergkette befindet.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1.0\textwidth]{Diagramms/Dominanz_Prominenz_2D.drawio.png}
+    \caption{2D-Geländeprofil zur Illustration von Prominenz und Dominanz eines Gipfels}
+    \label{fig:Geländeprofil_prominenz_dominanz}
+\end{figure}
+
+Die Abbildung \ref{fig:Geländeprofil_prominenz_dominanz} zeigt die reguläre Berechnung von Prominenz und Dominanz in einem idealisierten, unbegrenzten Gelände. Die Dominanz ist der Abstand zum nächstgelegenen höheren Punkt, und die Prominenz ist die Höhendifferenz zum maßgeblichen Sattel.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1.0\textwidth]{Diagramms/min_Dominanz_Prominenz_2D.drawio.png}
+    \caption{2D-Geländeprofil zur Illustration der minimalen Prominenz und Dominanz bei begrenztem Kartenausschnitt.}
+    \label{fig:Geländeprofil_min_prominenz_dominanz}
+\end{figure}
+
+Wird das Gelände jedoch durch einen Kartenausschnitt begrenzt, wie in Abbildung \ref{fig:Geländeprofil_min_prominenz_dominanz} dargestellt, ändern sich die garantierbaren Werte. Die minimale Dominanz wird als das Minimum aus zwei Werten definiert: der innerhalb des Ausschnitts berechneten Dominanz und der direkten Distanz des Gipfels zum Kartenrand. Diese Metrik wurde eingeführt, da ein höherer Punkt unmittelbar außerhalb des sichtbaren Kartenbereichs existieren könnte, was die wahre Dominanz limitieren würde. Analog dazu ergibt sich die minimale Prominenz als das Minimum aus der regulär berechneten Prominenz und der Höhendifferenz des Gipfels zum höchsten Sattel, der zum Kartenrand führt. Dieser "Randsattel" repräsentiert den höchsten Punkt, der mindestens überwunden werden muss, um den Kartenausschnitt zu verlassen, und begrenzt somit die nachweisbare Prominenz.
+
+Der Randabstand kann  
+
+Durch die Einführung dieser minimalen Werte kann das Randwertproblem neu definiert werden. Ein gefundener Gipfel wird als "randbeeinflusst" oder potenziell fehlerhaft klassifiziert, wenn seine reguläre Prominenz oder Dominanz größer ist als die entsprechenden minimalen Werte. Dies ermöglicht es dem Anwender, Gipfel, deren berechnete topografische Bedeutung über die Grenzen des Datensatzes hinausgeht, zu identifizieren und gesondert zu bewerten. Anstatt einen starren Randbereich von der Analyse auszuschließen, bietet dieser Ansatz eine flexible und quantifizierbare Methode, um mit der Unsicherheit am Rand umzugehen. 
+
 \todo{neueinführung min\_prom\/min\_dom}
 \todo{lösung\/Pojektrefernezfehler}
 \todo{Border width optimieren (immer optimaler wert wäre der Dominanzthreashold)}
