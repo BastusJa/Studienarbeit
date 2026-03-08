@@ -1,0 +1,118 @@
+\section{Einordnung der Laufzeitverbesserungen} \label{sec:laufzeitverbesserungen:optimierung}
+Um die Laufzeitverbesserungen zu bewerten, wurden die Laufzeiten der verschiedenen Testfälle vor und nach den Optimierungen gemessen. Es wurden die gleichen Testfälle wie in \ref{sec:testen_des_algorithmus} verwendet, um eine konsistente Vergleichsbasis zu gewährleisten. Um die vergelichbarkeit der Laufzeiten zu gewährleisten, wurden die Tests auf der gleichen Hardware durchgeführt und die gleichen Softwareumgebungen verwendet. Die Test wurde auf einem Computer mit einen Ryzen 7 5700X Prozessor und 32GB RAM durchgeführt. Als Betriebssystem wurde Nobara Linux 43 verwendet. Die Laufzeiten wurden mit der Python-Bibliothek \textit{time} gemessen, indem die Start- und Endzeitpunkte der Algorithmusausführung erfasst wurden. Wie in \ref{sec:aktuelles_testkonzept} beschrieben wurde für jeden testfall die Laufzeit der Maximabestimmung, der Prominenz- und Dominanzberechnung sowie der Gesamtalgorithmuslaufzeit gemessen. 
+
+\begin{table}[htbp]
+\centering
+\caption{Performance-Metriken für den Südschwarzwaldtest vor den Optimierungen}
+\label{tab:performance_blackforrest_before}
+\begin{tabular}{|l|r|}
+\hline
+Metrik & Wert \\
+\hline
+Maximabestimmung & 0.08s \\
+\hline
+Prominenzberechnung & 17.71s \\
+\hline
+Dominanzberechnung & 11.51s \\
+\hline
+Gesamtalgorithmuslaufzeit & 29.10s \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Performance-Metriken für den Südschwarzwaldtest nach den Optimierungen}
+\label{tab:performance_blackforrest_after}
+\begin{tabular}{|l|r|}
+\hline
+Metrik & Wert \\
+\hline
+Maximabestimmung & 0.08s \\
+\hline
+Prominenzberechnung & 1.96s \\
+\hline
+Dominanzberechnung & 16.85s \\
+\hline
+Gesamtalgorithmuslaufzeit & 18.67s \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Performance-Metriken für den Wetterstein vor den Optimierungen}
+\label{tab:performance_wetterstein_before}
+\begin{tabular}{|l|r|}
+\hline
+Metrik & Wert \\
+\hline
+Maximabestimmung & 0.01s \\
+\hline
+Prominenzberechnung & 1.41s \\
+\hline
+Dominanzberechnung & 1.92s \\
+\hline
+Gesamtalgorithmuslaufzeit & 3.76s \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Performance-Metriken für den Wetterstein nach den Optimierungen}
+\label{tab:performance_wetterstein_after}
+\begin{tabular}{|l|r|}
+\hline
+Metrik & Wert \\
+\hline
+Maximabestimmung & 0.01s \\
+\hline
+Prominenzberechnung & 1.20s \\
+\hline
+Dominanzberechnung & 2.54s \\
+\hline
+Gesamtalgorithmuslaufzeit & 4.09s \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Performance-Metriken für den Feldberg vor den Optimierungen}
+\label{tab:performance_feldberg_before}
+\begin{tabular}{|l|r|}
+\hline
+Metrik & Wert \\
+\hline
+Maximabestimmung & 0.01s \\
+\hline
+Prominenzberechnung & 1.20s \\
+\hline
+Dominanzberechnung & 0.21s \\
+\hline
+Gesamtalgorithmuslaufzeit & 1.48s \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Performance-Metriken für den Feldberg nach den Optimierungen}
+\label{tab:performance_feldberg_after}
+\begin{tabular}{|l|r|}
+\hline
+Metrik & Wert \\
+\hline
+Maximabestimmung & 0.01s \\
+\hline
+Prominenzberechnung & 1.24s \\
+\hline
+Dominanzberechnung & 1.60s \\
+\hline
+Gesamtalgorithmuslaufzeit & 2.87s \\
+\hline
+\end{tabular}
+\end{table}
+
+\todo{tests interpretieren und bewerten. \*erst ganz am ende von der PA wenn sich nichts mehr ändert}
