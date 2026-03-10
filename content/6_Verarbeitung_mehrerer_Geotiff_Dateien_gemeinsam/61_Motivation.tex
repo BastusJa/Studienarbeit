@@ -1,0 +1,9 @@
+\section{Motivation} \label{sec:Motivation_multi}
+Die Gipfelsuche auf umfangreichen Datensätzen erfordert eine dateiübergreifende Verarbeitung von GeoTIFF-Dateien.
+Diese Notwendigkeit ergibt sich aus zwei wesentlichen Gründen. Erstens begrenzt das GeoTIFF-Format die Dateigröße auf 4 GB, was für die Abbildung großer Kartenbereiche in hoher Auflösung oder ganzer Gebirge nicht ausreicht. Zweitens liegen Geodaten häufig in Form von Kacheln vor, die als separate GeoTIFF-Dateien gespeichert sind.
+
+Um ein ganzes Gebirge zu analysieren, müssen die Daten aus diesen Kacheln entweder zu einer einzigen Datei zusammengefügt oder durch eine Logik verarbeitet werden, die eine gleichzeitige Analyse mehrerer Dateien ermöglicht. In dieser Projektarbeit wird die zweite Option verfolgt, da sie eine flexiblere und effizientere Verarbeitung ermöglicht.
+
+Für eine laufzeiteffiziente Verarbeitung ist die Implementierung von Multithreading erforderlich. Dadurch können die Daten mehrerer Dateien parallel verarbeitet und die Ressourcen eines Mehrkernsystems optimal genutzt werden, was die zeitaufwendige Verarbeitung großer Datenmengen beschleunigt.
+
+Neben der parallelen Verarbeitung muss auch das korrekte Zusammenführen der Daten gewährleistet sein. Die Daten aus den verschiedenen Dateien müssen so zusammengeführt werden, dass topografische Merkmale über die Dateigrenzen hinweg korrekt identifiziert werden können. Dafür muss eine Logik implementiert werden, die die Prominenz- und Dominanzberechnung über die Dateigrenzen hinweg ermöglicht, um sicherzustellen, dass die Ergebnisse der Gipfelsuche konsistent und genau sind. Die Prominenzberechnung und Dominanzberechnung auf den einzelnen Dateien wird zuvor ausgeführt, um die Datenmenge zu reduzieren, bevor die Ergebnisse über die Dateigrenzen hinweg zusammengeführt werden.
